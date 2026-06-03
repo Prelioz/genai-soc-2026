@@ -92,3 +92,39 @@ PERSONAS = {
             "output_format": "text"
     },
 }
+
+def build_messages(user_query, selected_mode):
+
+    persona = PERSONAS[selected_mode]
+
+    messages = [
+        {
+        "role" : "system",
+        "content" : persona["system_prompt"]
+    }
+    ]
+
+    for example in persona["few_shot_examples"]:
+        messages.append(
+            {
+                "role": "user",
+                "content" : example["user"]
+            }
+        )
+        messages.append(
+            {
+                "role" : "assistant",
+                "content" : example["assistant"]
+            }
+        )
+
+    messages.append(
+        {
+        "role" : "user",
+        "content" : user_query
+        }
+    ) 
+
+    return messages     
+
+
