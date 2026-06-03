@@ -15,4 +15,3 @@ response = client.chat.completions.create(
 )
 
 print(response.choices[0].message.content)
-# If you see a 2-sentence answer, Week 0 is done. Welcome to Week 1.
