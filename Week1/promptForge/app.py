@@ -129,26 +129,57 @@ def build_messages(user_query, selected_mode):
     return messages     
 
 
+import json
+
 def chat(user_query, selected_mode):
 
     messages = build_messages(user_query, selected_mode)
 
     stream = client.chat.completions.create(
-        model = "llama-3.3-70b-versatile",
-        messages = messages,
-        stream = True
-
+        model="llama-3.3-70b-versatile",
+        messages=messages,
+        stream=True
     )
 
     response_text = ""
 
     for chunk in stream:
-        
+
         content = chunk.choices[0].delta.content
 
         if content:
             response_text += content
-            yield response_text
+
+            # Stream normally for all personas except Code Reviewer
+            if selected_mode != "Code Reviewer":
+                yield response_text
+
+    # Handle Code Reviewer output
+    if selected_mode == "Code Reviewer":
+
+        try:
+            review = json.loads(response_text)
+
+            issues = review.get("issues", [])
+            suggestions = review.get("suggestions", [])
+            severity = review.get("severity", "Unknown")
+
+            formatted = f"## Severity\n- {severity}\n\n"
+
+            formatted += "## Issues\n"
+            for issue in issues:
+                formatted += f"- {issue}\n"
+
+            formatted += "\n## Suggestions\n"
+            for suggestion in suggestions:
+                formatted += f"- {suggestion}\n"
+
+            yield formatted
+
+        except json.JSONDecodeError:
+            yield f"⚠️ Failed to parse JSON\n\n{response_text}"
+   
+            
 
 with gr.Blocks() as trial:
     gr.Markdown("<h1 style='text-align: center;'>PromptForge</h1>")
