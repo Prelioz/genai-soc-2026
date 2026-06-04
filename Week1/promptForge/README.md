@@ -136,5 +136,3 @@ Through this project, I practiced:
 ## 👨‍💻 Author
 
 **Bhavya Modi**
-
-Built as part of my Generative AI learning journey.
