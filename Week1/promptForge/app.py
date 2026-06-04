@@ -128,3 +128,24 @@ def build_messages(user_query, selected_mode):
     return messages     
 
 
+def chat(user_query, selected_mode):
+
+    messages = build_messages(user_query, selected_mode)
+
+    stream = client.chat.completions.create(
+        model = "llama-3.3-70b-versatile",
+        messages = messages,
+        stream = True
+
+    )
+
+    response_text = ""
+
+    for chunk in stream:
+        
+        content = chunk.choices[0].delta.content
+
+        if content:
+            response_text += content
+            yield response_text
+
