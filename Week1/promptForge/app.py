@@ -24,6 +24,7 @@ PERSONAS = {
     },
 
 
+
     "Programmer" :{
         "system_prompt" : ("You are a expert software engineer. You have to give the most optimised solutions to the questions given to you."
         "Help us debug and write codes. Provide clean and efficient reasoning too"),
@@ -149,3 +150,36 @@ def chat(user_query, selected_mode):
             response_text += content
             yield response_text
 
+with gr.Blocks() as trial:
+    gr.Markdown("<h1 style='text-align: center;'>PromptForge</h1>")
+
+    drop_down_menu = gr.Dropdown(
+    choices = list(PERSONAS.keys()),
+    label = "Choose an AI Persona",
+    value = "Mentor"
+    )
+
+    query_box = gr.Textbox(
+        label="Ask your question",
+        placeholder = "Ask anything...",
+        lines = 3
+    )
+
+
+    submit_button = gr.Button("🚀 Generate",
+                              variant = "primary"
+                              )
+
+    output_box = gr.Textbox(
+        placeholder = "Output will be shown here",
+        lines = 12
+    )
+
+    submit_button.click(
+        fn=chat,
+        inputs=[query_box, drop_down_menu],
+        outputs=output_box
+
+    )
+
+    trial.launch()
