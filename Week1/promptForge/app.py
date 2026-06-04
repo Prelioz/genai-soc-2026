@@ -160,11 +160,10 @@ with gr.Blocks() as trial:
     )
 
     query_box = gr.Textbox(
-        label="Ask your question",
-        placeholder = "Ask anything...",
-        lines = 3
-    )
-
+    label="💬 Ask your question",
+    placeholder="e.g. Explain recursion using an analogy",
+    lines=3
+)
 
     submit_button = gr.Button("🚀 Generate",
                               variant = "primary"
@@ -182,4 +181,4 @@ with gr.Blocks() as trial:
 
     )
 
-    trial.launch()
+trial.launch()
