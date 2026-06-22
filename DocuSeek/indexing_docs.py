@@ -33,6 +33,27 @@ def create_chunks(documents):
     return chunks
 
 
+def create_embeddings():
+
+    embedding_model = HuggingFaceEmbeddings(
+        model_name = "all-MiniLM-L6-v2",
+        model_kwargs={"device": "cpu"}
+    )
+
+    documents = load_document()
+
+    chunks = create_chunks(documents)
+
+    texts = []
+
+    for chunk in chunks:
+        texts.append(chunk.page_content)
+
+
+    embedding_model.embed_documents(texts)
+
+
+
 
 
 
