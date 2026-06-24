@@ -33,27 +33,33 @@ def create_chunks(documents):
     return chunks
 
 
-def create_embeddings():
+def create_vector_db(pdf_path):
 
     embedding_model = HuggingFaceEmbeddings(
-        model_name = "all-MiniLM-L6-v2",
-        model_kwargs={"device": "cpu"}
+    model_name="all-MiniLM-L6-v2",
+     model_kwargs={"device": "cpu"}
     )
 
-    documents = load_document()
+    documents = load_document(pdf_path)
 
     chunks = create_chunks(documents)
 
-    texts = []
+    vector_db = Chroma.from_documents(
+        documents = chunks,
+        embedding = embedding_model,
+        persist_directory = "chroma_store"
 
-    for chunk in chunks:
-        texts.append(chunk.page_content)
+    )
 
+    vector_db.persist
 
-    embedding_model.embed_documents(texts)
+    db = Chroma(
+    persist_directory="chroma_store",
+    embedding_function=embedding_model
+)
 
+    retriever = db.as_retriever(
+        search_kwargs={"k": 3}
+    )
 
-
-
-
-
+   
