@@ -48,7 +48,7 @@ def load_vector_db():
 def ask_query(user_query):
     db = load_vector_db()
 
-    docs = db.similarity_search(user_query, k=5)
+    docs = db.similarity_search(user_query, k=7)
 
     context = "\n\n".join(doc.page_content for doc in docs)
 
