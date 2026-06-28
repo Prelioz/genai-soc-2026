@@ -36,10 +36,7 @@ def create_chunks(documents):
 
 def create_vector_db(pdf_path):
 
-    embedding_model = HuggingFaceEmbeddings(
-    model_name="all-MiniLM-L6-v2",
-    model_kwargs={"device": "cpu"}
-    )
+    from embeddings import embedding_model
 
     documents = load_document(pdf_path)
 
@@ -58,10 +55,8 @@ def create_vector_db(pdf_path):
 def load_vector_db():
 
 
-    embedding_model = HuggingFaceEmbeddings(
-        model_name = "all-MiniLM-L6-v2",
-        model_kwargs={"device": "cpu"} 
-    )
+    from embeddings import embedding_model
+    
     db = Chroma(
         persist_directory = "chroma_store",
         embedding_function = embedding_model
@@ -96,12 +91,3 @@ def ask_query(user_query):
     response = generate_response(prompt)
 
     return response
-
-
-
-
-
-
-
-
-    
