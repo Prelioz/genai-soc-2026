@@ -27,6 +27,11 @@ def create_chunks(documents):
 
     chunks = splitter.split_documents(documents)
 
+    for i, chunk in enumerate(chunks):
+     if "Google" in chunk.page_content:
+        print(f"\nGoogle found in chunk {i}")
+        print(chunk.page_content)
+
     print(type(chunks))
     print(len(chunks))
     print(type(chunks[0]))
@@ -52,7 +57,7 @@ def create_vector_db(pdf_path):
 
     )
 
-    vector_db.persist()
+   
 
 
 def load_vector_db():
@@ -73,13 +78,17 @@ def ask_query(user_query):
 
     db = load_vector_db()
 
-    retriever = db.as_retriever(
-    search_kwargs={"k": 3}
-    )
+    docs = db.similarity_search_with_score(user_query, k=5)
 
-    docs = retriever.invoke(user_query)
+    print("\n========== Retrieved Chunks ==========\n")
 
-    context = "\n\n".join(doc.page_content for doc in docs)
+    for i, (doc, score) in enumerate(docs):
+        print(f"\nChunk {i+1}")
+        print("Score:", score)
+        print("Page:", doc.metadata.get("page"))
+        print(doc.page_content[:300])
+
+    context = "\n\n".join(doc.page_content for doc, score in docs)
 
     prompt = f"""
     Answer the question only using the context below.
