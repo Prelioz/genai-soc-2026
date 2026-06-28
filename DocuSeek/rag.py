@@ -67,6 +67,4 @@ Question:
 Answer:
 """
 
-    response = generate_response(prompt)
-
-    return response
+    return generate_response(prompt)
